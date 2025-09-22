@@ -9,7 +9,7 @@ function App() {
     const token = import.meta.env.VITE_TOKEN
     const config={
       method:"GET",
-      Headers: {
+      headers: {
         'content-type': "application/json",
         authorization: `Bearer ${token}`
       },
