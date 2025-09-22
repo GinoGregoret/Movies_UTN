@@ -4,10 +4,10 @@ export function Tarjeta({ item }) {
   
         <div className="absolute inset-0 w-full h-full">
           <img
-            className="w-full h-full object-cover"
-            src={item.imageUrl}
-            alt={`Póster de ${item.title}`}
-          />
+  className="w-full h-full object-cover"
+  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+  alt={`Póster de ${item.title}`}
+/>
         </div>
   
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/50"></div>
