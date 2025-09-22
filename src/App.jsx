@@ -1,55 +1,71 @@
 import { useEffect, useState } from 'react'
-import { consultar } from './api/api.js'
+import { getPopularMovies } from './api/api.js'
 import {Contenedor} from './components/Contenedor.jsx'
 import {Tarjeta} from './components/Tarjeta.jsx'
 
 function App() {
-  const [generos, setGeneros] = useState([])
-  const [generoSeleccionado, setGeneroSeleccionado] = useState(null)
-  const [peliculas, setPeliculas] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
 
-  useEffect(()=>{
-    const url = import.meta.env.VITE_URL
-    const token = import.meta.env.VITE_TOKEN
-    const config={
-      method:"GET",
-      headers: {
-        'content-type': "application/json",
-        authorization: `Bearer ${token}`
-      },
+  useEffect(() => {
+  const url = import.meta.env.VITE_URL
+  const token = import.meta.env.VITE_TOKEN
+
+  const config = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${token}`
     }
-    fetch(url, config)
-    .then((data)=>data.json())
-    .then((data)=> console.log(data))
-  },[])
+  }
+
+  fetch(url, config)
+    .then(res => res.json())
+    .then(data => {
+      console.log('Películas recibidas:', data)
+      setMovies(data.results || [])
+      setLoading(false)             
+    })
+    .catch(err => {
+      console.error('Error al cargar películas:', err)
+      setLoading(false)
+    })
+}, [])
+    const filteredMovies = movies.filter(movie =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   
-  
+
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen text-white p-6">
-      <h1 className="text-4xl font-bold mb-6 text-center tracking-wide">🎥 Películas</h1>
-      <div className="flex overflow-x-auto gap-4 mb-8 scrollbar-hide">
-        {generos.map(g => (
-          <button
-            key={g.id}
-            onClick={() => setGeneroSeleccionado(g.id)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300
-              ${generoSeleccionado === g.id ? 'bg-purple-600 text-white' : 'bg-gray-700 hover:bg-purple-500'}`}
-          >
-            {g.name}
-          </button>
-        ))}
+    <main className="bg-gray-900 min-h-screen text-white font-sans p-8">
+    
+      <div className="text-center mb-12">
+        <h1 className="text-6xl font-extrabold mb-4">
+          🍿 Peliculas 🍿
+        </h1>
+        <input
+          type="text"
+          placeholder="Busca la película por nombre..."
+          className="w-full max-w-lg p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          onChange={(e) => setSearchTerm(e.target.value)} 
+        />
       </div>
-      {loading && <p className="text-center text-purple-300 text-lg">Cargando...</p>}
-      <Contenedor>
-        {peliculas.map(p => (
-        <Tarjeta key={p.id} item={p} />
-        ))}
-      </Contenedor>
-</div>
-  )
+
+    
+      {loading ? (
+        <p className="text-center text-xl">Cargando películas...</p>
+      ) : (
+       
+        <Contenedor>
+          {filteredMovies.map((movie) => (
+            <Tarjeta key={movie.id} item={movie} />
+          ))}
+        </Contenedor>
+      )}
+    </main>
+  );
 }
 
-
-export default App
+export default App;
