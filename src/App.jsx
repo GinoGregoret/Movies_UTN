@@ -53,7 +53,6 @@ function App() {
         />
       </div>
 
-    
       {loading ? (
         <p className="text-center text-xl">Cargando películas...</p>
       ) : (
