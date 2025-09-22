@@ -43,10 +43,10 @@ function App() {
       </div>
       {loading && <p className="text-center text-purple-300 text-lg">Cargando...</p>}
       <Contenedor>
-  {peliculas.map(p => (
-    <Tarjeta key={p.id} item={p} />
-  ))}
-</Contenedor>
+        {peliculas.map(p => (
+        <Tarjeta key={p.id} item={p} />
+        ))}
+      </Contenedor>
 </div>
   )
 }
